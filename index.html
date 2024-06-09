@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
     <title>終末先鋒隊　必要欠片数計算機</title>
     <style>
         body {
@@ -34,6 +33,9 @@
         }
         .highlight {
             background-color: #ffe6e6; /* 薄いピンク */
+        }
+        .highlight-blue {
+            background-color: #e6f2ff; /* 薄い青 */
         }
         .long-text {
             white-space: nowrap; /* テキストを改行しない */
@@ -102,12 +104,26 @@
             SP: 80
         };
 
+        const awakeningLevels = [
+            { level: "覚醒1", exp: 150 },
+            { level: "覚醒2", exp: 150 },
+            { level: "覚醒3", exp: 200 },
+            { level: "覚醒4", exp: 200 },
+            { level: "覚醒5", exp: 500 }
+        ]; 
+
         document.addEventListener('DOMContentLoaded', (event) => {
             const levelSelect = document.getElementById('level');
             for (let i = 1; i <= 50; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.text = i;
+                levelSelect.appendChild(option);
+            }
+            for (let i = 0; i < awakeningLevels.length - 1; i++) {
+                const option = document.createElement('option');
+                option.value = 51 + i; // 覚醒レベルの値を設定
+                option.text = awakeningLevels[i].level;
                 levelSelect.appendChild(option);
             }
         });
@@ -129,22 +145,27 @@
             const level = parseInt(document.getElementById('level').value);
             const currentExp = parseInt(document.getElementById('currentExp').value);
             const expTableBody = document.getElementById('expTable').getElementsByTagName('tbody')[0];
-            
+
             if (isNaN(level) || isNaN(currentExp)) {
                 alert("レベルと現在の経験値を入力してください。");
                 return;
             }
-            
+
             expTableBody.innerHTML = '';
 
             let expNeeded = 0;
             let remainingExp = currentExp;
 
-            for (let i = level + 1; i <= 50; i++) {
-                let nextLevelExp = i;
-                if (i % 5 === 0) {
-                    nextLevelExp *= 2;
-                }
+            for (let i = level + 1; i <= 55; i++) { 
+                let nextLevelExp;
+                if (i <= 50) {
+                    nextLevelExp = i;
+                    if (i % 5 === 0) {
+                        nextLevelExp *= 2;
+                    }
+                } else {
+                    nextLevelExp = awakeningLevels[i - 51].exp;
+                } 
 
                 expNeeded += nextLevelExp;
 
@@ -156,12 +177,20 @@
                 if (i % 5 === 0) {
                     row.classList.add('highlight');
                 }
+                if (i > 50) { 
+                    row.classList.add('highlight-blue');
+                }
                 let cell1 = row.insertCell(0);
                 let cell2 = row.insertCell(1);
                 let cell3 = row.insertCell(2);
                 let cell4 = row.insertCell(3);
 
-                cell1.innerHTML = `${i}`;
+               
+                if (i <= 50) {
+                    cell1.innerHTML = `${i}`;
+                } else {
+                    cell1.innerHTML = awakeningLevels[i - 51].level;
+                }
 
                 if (expNeeded < 0) {
                     cell2.innerHTML = '-';
