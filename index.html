@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>終末先鋒隊　必要欠片数計算機</title>
     <style>
         body {
@@ -60,6 +61,8 @@
     </style>
 </head>
 <body>
+    <div id="google_translate_element"></div> <!-- Google Translate Widget -->
+    
     <div class="container">
         <h1>終末先鋒隊　欠片計算機</h1>
 
@@ -76,7 +79,7 @@
             <option value="">選択してください</option>
         </select>
 
-        <label for="currentExp">現在の欠片数:</label>
+        <label for="currentExp">現在の経験値:</label>
         <input type="number" id="currentExp" min="0" disabled oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
         <button onclick="calculate()">計算する</button>
@@ -96,6 +99,13 @@
         </table>
     </div>
 
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ja'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     <script>
         const expPerRarity = {
             B: 10,
@@ -110,7 +120,7 @@
             { level: "覚醒3", exp: 200 },
             { level: "覚醒4", exp: 200 },
             { level: "覚醒5", exp: 500 }
-        ]; 
+        ];
 
         document.addEventListener('DOMContentLoaded', (event) => {
             const levelSelect = document.getElementById('level');
@@ -156,7 +166,7 @@
             let expNeeded = 0;
             let remainingExp = currentExp;
 
-            for (let i = level + 1; i <= 55; i++) { 
+            for (let i = level + 1; i <= 55; i++) {
                 let nextLevelExp;
                 if (i <= 50) {
                     nextLevelExp = i;
@@ -165,7 +175,7 @@
                     }
                 } else {
                     nextLevelExp = awakeningLevels[i - 51].exp;
-                } 
+                }
 
                 expNeeded += nextLevelExp;
 
@@ -177,7 +187,7 @@
                 if (i % 5 === 0) {
                     row.classList.add('highlight');
                 }
-                if (i > 50) { 
+                if (i > 50) {
                     row.classList.add('highlight-blue');
                 }
                 let cell1 = row.insertCell(0);
@@ -185,7 +195,6 @@
                 let cell3 = row.insertCell(2);
                 let cell4 = row.insertCell(3);
 
-               
                 if (i <= 50) {
                     cell1.innerHTML = `${i}`;
                 } else {
